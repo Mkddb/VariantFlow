@@ -11,32 +11,29 @@ params.reads = "data/*_{1,2}.fastq.gz"
 
 workflow {
 
-    // Input
-    Channel
-        .fromFilePairs(params.reads, checkIfExists: true)
-        .map { sample, reads -> tuple(sample, reads) }
-        .set { read_pairs }
+    // INPUT (already paired correctly)
+    read_pairs = Channel.fromFilePairs(params.reads, checkIfExists: true)
 
     // QC
     FASTQC(read_pairs)
 
-    // Alignment
-    aligned = ALIGN(read_pairs)
+    // ALIGNMENT
+    aligned_ch = ALIGN(read_pairs)
 
-    // BAM processing
-    bam = BAM_PROCESS(aligned.bam)
+    // BAM PROCESSING
+    bam_ch = BAM_PROCESS(aligned_ch.bam)
 
-    // Variant calling (per sample)
-    variants = VARIANT_CALLING(bam.sorted_bam)
+    // VARIANT CALLING
+    variants_ch = VARIANT_CALLING(bam_ch.sorted_bam)
 
-    // IMPORTANT FIX: flatten GVCF channel
-    gvcfs = variants.gvcf.map { it[1] }
+    // EXTRACT GVCFs (depends on your module output structure)
+    gvcf_ch = variants_ch.gvcf.flatten()
 
-    // Joint genotyping
-    joint = JOINT_GENOTYPING(gvcfs.collect())
+    // JOINT GENOTYPING
+    joint_ch = JOINT_GENOTYPING(gvcf_ch.collect())
 
-    // Annotation
-    annotated = ANNOTATION(joint.vcf)
+    // ANNOTATION
+    annotated_ch = ANNOTATION(joint_ch.vcf)
 
-    annotated.view()
+    annotated_ch.view()
 }
