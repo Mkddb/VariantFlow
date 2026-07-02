@@ -8,11 +8,10 @@ process ALIGN {
     output:
     tuple val(sample), path("${sample}.bam"), emit: bam
 
-   script:
-"""
-mkdir -p ${params.outdir}/bam
-
-bwa mem ${params.genome} ${reads[0]} ${reads[1]} \
-| samtools view -Sb - \
-> ${params.outdir}/bam/${sample}.bam
-"""
+    script:
+    """
+    bwa mem -t ${task.cpus} ${params.genome} ${reads[0]} ${reads[1]} \
+    | samtools view -Sb - \
+    > ${sample}.bam
+    """
+}
