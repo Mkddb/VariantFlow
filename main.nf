@@ -1,12 +1,15 @@
 nextflow.enable.dsl = 2
 
+include { FASTQC } from './modules/fastqc.nf'
+
 params.reads = "data/*_{1,2}.fastq.gz"
 
 workflow {
 
     Channel
         .fromFilePairs(params.reads, checkIfExists: true)
+        .map { sample, reads -> tuple(sample, reads) }
         .set { read_pairs }
 
-    read_pairs.view()
+    FASTQC(read_pairs)
 }
