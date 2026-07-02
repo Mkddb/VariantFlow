@@ -10,7 +10,7 @@ process ALIGN {
 
     script:
     """
-    bwa mem ref.fa ${reads[0]} ${reads[1]} \
+    bwa mem ${params.genome} ${reads[0]} ${reads[1]} \
     | samtools view -Sb - \
     > ${sample}.bam
     """
