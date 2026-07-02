@@ -6,15 +6,17 @@ process VARIANT_CALLING {
     tuple val(sample), path(bam)
 
     output:
-    tuple val(sample), path("${sample}.g.vcf.gz"), emit: gvcf
+    tuple val(sample),
+          path("${sample}.g.vcf.gz"),
+          path("${sample}.g.vcf.gz.tbi"),
+          emit: gvcf
 
-   script:
-"""
-mkdir -p ${params.outdir}/variants
-
-gatk HaplotypeCaller \
-    -R ${params.genome} \
-    -I ${bam} \
-    -O ${params.outdir}/variants/${sample}.g.vcf.gz \
-    -ERC GVCF
-"""
+    script:
+    """
+    gatk HaplotypeCaller \
+        -R ${params.genome} \
+        -I ${bam} \
+        -O ${sample}.g.vcf.gz \
+        -ERC GVCF
+    """
+}
