@@ -7,17 +7,17 @@ process ANNOTATION {
 
     output:
     path "annotated.vcf", emit: annotated_vcf
+    path "annotated.vcf.idx", emit: index
 
-  script:
-"""
-mkdir -p ${params.outdir}/annotation
-
-vep \
-    -i ${vcf} \
-    -o ${params.outdir}/annotation/annotated.vcf \
-    --vcf \
-    --species homo_sapiens \
-    --cache \
-    --offline \
-    --everything
-"""
+    script:
+    """
+    vep \
+        -i ${vcf} \
+        -o annotated.vcf \
+        --vcf \
+        --species homo_sapiens \
+        --cache \
+        --offline \
+        --everything
+    """
+}
