@@ -10,16 +10,14 @@ process JOINT_GENOTYPING {
     path "cohort.vcf.gz.tbi", emit: index
 
     script:
-    """
-    mkdir -p ${params.outdir}/variants
+    def vcf_args = gvcfs.collect { "-V ${it}" }.join(' ')
 
-    # Combine GVCFs properly (no Nextflow logic inside script)
+    """
     gatk CombineGVCFs \
         -R ${params.genome} \
-        ${gvcfs.collect { "-V " + it }.join(" ")} \
+        ${vcf_args} \
         -O cohort.g.vcf.gz
 
-    # Genotype
     gatk GenotypeGVCFs \
         -R ${params.genome} \
         -V cohort.g.vcf.gz \
