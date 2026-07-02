@@ -11,13 +11,13 @@ process JOINT_GENOTYPING {
     script:
     """
     gatk CombineGVCFs \
-        -R ref.fa \
+        -R ${params.genome} \
         ${gvcfs.collect { "-V " + it }.join(" ")} \
-        -O cohort.vcf.gz
+        -O cohort.g.vcf.gz
 
     gatk GenotypeGVCFs \
-        -R ref.fa \
-        -V cohort.vcf.gz \
-        -O cohort_final.vcf.gz
+        -R ${params.genome} \
+        -V cohort.g.vcf.gz \
+        -O cohort.vcf.gz
     """
 }
