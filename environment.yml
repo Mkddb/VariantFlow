@@ -1,0 +1,14 @@
+name: variantflow
+
+channels:
+  - bioconda
+  - conda-forge
+
+dependencies:
+  - nextflow
+  - bwa
+  - samtools
+  - gatk4
+  - ensembl-vep
+  - fastqc
+  - python=3.9
