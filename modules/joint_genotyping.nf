@@ -7,18 +7,22 @@ process JOINT_GENOTYPING {
 
     output:
     path "cohort.vcf.gz", emit: vcf
+    path "cohort.vcf.gz.tbi", emit: index
 
-   script:
-"""
-mkdir -p ${params.outdir}/variants
+    script:
+    """
+    mkdir -p ${params.outdir}/variants
 
-gatk CombineGVCFs \
-    -R ${params.genome} \
-    ${gvcfs.collect { "-V " + it }.join(" ")} \
-    -O ${params.outdir}/variants/cohort.g.vcf.gz
+    # Combine GVCFs properly (no Nextflow logic inside script)
+    gatk CombineGVCFs \
+        -R ${params.genome} \
+        ${gvcfs.collect { "-V " + it }.join(" ")} \
+        -O cohort.g.vcf.gz
 
-gatk GenotypeGVCFs \
-    -R ${params.genome} \
-    -V ${params.outdir}/variants/cohort.g.vcf.gz \
-    -O ${params.outdir}/variants/cohort.vcf.gz
-"""
+    # Genotype
+    gatk GenotypeGVCFs \
+        -R ${params.genome} \
+        -V cohort.g.vcf.gz \
+        -O cohort.vcf.gz
+    """
+}
