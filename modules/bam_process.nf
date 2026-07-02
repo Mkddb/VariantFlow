@@ -10,9 +10,8 @@ process BAM_PROCESS {
     tuple val(sample), path("${sample}.sorted.bam.bai"), emit: index
 
     script:
-"""
-mkdir -p ${params.outdir}/bam
-
-samtools sort -o ${params.outdir}/bam/${sample}.sorted.bam ${bam}
-samtools index ${params.outdir}/bam/${sample}.sorted.bam
-"""
+    """
+    samtools sort -o ${sample}.sorted.bam ${bam}
+    samtools index ${sample}.sorted.bam
+    """
+}
