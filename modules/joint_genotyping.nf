@@ -8,16 +8,17 @@ process JOINT_GENOTYPING {
     output:
     path "cohort.vcf.gz", emit: vcf
 
-    script:
-    """
-    gatk CombineGVCFs \
-        -R ${params.genome} \
-        ${gvcfs.collect { "-V " + it }.join(" ")} \
-        -O cohort.g.vcf.gz
+   script:
+"""
+mkdir -p ${params.outdir}/variants
 
-    gatk GenotypeGVCFs \
-        -R ${params.genome} \
-        -V cohort.g.vcf.gz \
-        -O cohort.vcf.gz
-    """
-}
+gatk CombineGVCFs \
+    -R ${params.genome} \
+    ${gvcfs.collect { "-V " + it }.join(" ")} \
+    -O ${params.outdir}/variants/cohort.g.vcf.gz
+
+gatk GenotypeGVCFs \
+    -R ${params.genome} \
+    -V ${params.outdir}/variants/cohort.g.vcf.gz \
+    -O ${params.outdir}/variants/cohort.vcf.gz
+"""
