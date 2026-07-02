@@ -11,28 +11,20 @@ params.reads = "data/*_{1,2}.fastq.gz"
 
 workflow {
 
-    // INPUT
     read_pairs = Channel.fromFilePairs(params.reads, checkIfExists: true)
 
-    // QC
     FASTQC(read_pairs)
 
-    // ALIGNMENT
     aligned_ch = ALIGN(read_pairs)
 
-    // BAM PROCESSING
     bam_ch = BAM_PROCESS(aligned_ch.out.bam)
 
-    // VARIANT CALLING
     variants_ch = VARIANT_CALLING(bam_ch.out.sorted_bam)
 
-    // GVCFs
     gvcf_ch = variants_ch.out.gvcf
 
-    // JOINT GENOTYPING
     joint_ch = JOINT_GENOTYPING(gvcf_ch.collect())
 
-    // ANNOTATION
     annotated_ch = ANNOTATION(joint_ch.out.vcf)
 
     annotated_ch.view()
