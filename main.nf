@@ -26,7 +26,7 @@ workflow {
     // VARIANT CALLING
     variants_ch = VARIANT_CALLING(bam_ch.out.sorted_bam)
 
-    // GVCF extraction (depends on module emit)
+    // GVCFs
     gvcf_ch = variants_ch.out.gvcf
 
     // JOINT GENOTYPING
