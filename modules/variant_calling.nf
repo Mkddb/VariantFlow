@@ -18,5 +18,7 @@ process VARIANT_CALLING {
         -I ${bam} \
         -O ${sample}.g.vcf.gz \
         -ERC GVCF
+
+    tabix -p vcf ${sample}.g.vcf.gz
     """
 }
