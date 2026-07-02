@@ -1,0 +1,11 @@
+##fileformat=VCFv4.2
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+chrTest	1001	.	A	C	.	PASS	.
+chrTest	2001	.	C	G	.	PASS	.
+chrTest	3001	.	T	A	.	PASS	.
+chrTest	4001	.	T	A	.	PASS	.
+chrTest	5001	.	C	A	.	PASS	.
+chrTest	6001	.	T	G	.	PASS	.
+chrTest	7001	.	G	T	.	PASS	.
+chrTest	8001	.	T	C	.	PASS	.
+chrTest	9001	.	A	T	.	PASS	.
